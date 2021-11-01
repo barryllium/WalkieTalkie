@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Message: Codable {
+struct Message: Codable, Identifiable {
     static let path = "history"
     
     let id: Int

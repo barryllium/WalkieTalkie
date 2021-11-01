@@ -20,6 +20,10 @@
 		F18F3D6227304751009A210B /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6127304751009A210B /* ConversationView.swift */; };
 		F18F3D64273051B3009A210B /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D63273051B3009A210B /* APIClient.swift */; };
 		F18F3D66273052AD009A210B /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D65273052AD009A210B /* APIRequest.swift */; };
+		F18F3D6C27308071009A210B /* ThemedTextFieldModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6B27308071009A210B /* ThemedTextFieldModifier.swift */; };
+		F18F3D6E273081A2009A210B /* ThemedTextModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6D273081A2009A210B /* ThemedTextModifier.swift */; };
+		F18F3D71273081D5009A210B /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D70273081D5009A210B /* Color+Extension.swift */; };
+		F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D72273084FA009A210B /* NavSearchModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +42,10 @@
 		F18F3D63273051B3009A210B /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		F18F3D65273052AD009A210B /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		F18F3D6727305EB0009A210B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F18F3D6B27308071009A210B /* ThemedTextFieldModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTextFieldModifier.swift; sourceTree = "<group>"; };
+		F18F3D6D273081A2009A210B /* ThemedTextModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTextModifier.swift; sourceTree = "<group>"; };
+		F18F3D70273081D5009A210B /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		F18F3D72273084FA009A210B /* NavSearchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavSearchModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,11 +78,13 @@
 		F18F3D4127304597009A210B /* WalkieTalkie */ = {
 			isa = PBXGroup;
 			children = (
-				F18F3D6727305EB0009A210B /* Info.plist */,
 				F18F3D52273046F1009A210B /* API */,
 				F18F3D4627304598009A210B /* Assets.xcassets */,
+				F18F3D6F273081C5009A210B /* Extensions */,
+				F18F3D6727305EB0009A210B /* Info.plist */,
 				F18F3D582730471B009A210B /* Managers */,
 				F18F3D50273046C4009A210B /* Models */,
+				F18F3D6A27308039009A210B /* Modifiers */,
 				F18F3D4827304598009A210B /* Preview Content */,
 				F18F3D51273046E8009A210B /* Views */,
 				F18F3D4227304597009A210B /* WalkieTalkieApp.swift */,
@@ -126,6 +136,24 @@
 				F18F3D5927304724009A210B /* DataManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		F18F3D6A27308039009A210B /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				F18F3D6B27308071009A210B /* ThemedTextFieldModifier.swift */,
+				F18F3D6D273081A2009A210B /* ThemedTextModifier.swift */,
+				F18F3D72273084FA009A210B /* NavSearchModifier.swift */,
+			);
+			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		F18F3D6F273081C5009A210B /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F18F3D70273081D5009A210B /* Color+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,17 +226,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F18F3D6E273081A2009A210B /* ThemedTextModifier.swift in Sources */,
+				F18F3D71273081D5009A210B /* Color+Extension.swift in Sources */,
 				F18F3D54273046FE009A210B /* LoginView.swift in Sources */,
 				F18F3D5A27304724009A210B /* DataManager.swift in Sources */,
 				F18F3D5C27304736009A210B /* User.swift in Sources */,
 				F18F3D64273051B3009A210B /* APIClient.swift in Sources */,
 				F18F3D5727304714009A210B /* HistoryView.swift in Sources */,
 				F18F3D6027304746009A210B /* MessageView.swift in Sources */,
+				F18F3D6C27308071009A210B /* ThemedTextFieldModifier.swift in Sources */,
 				F18F3D4527304597009A210B /* ContentView.swift in Sources */,
 				F18F3D66273052AD009A210B /* APIRequest.swift in Sources */,
 				F18F3D4327304597009A210B /* WalkieTalkieApp.swift in Sources */,
 				F18F3D5E2730473D009A210B /* Message.swift in Sources */,
 				F18F3D6227304751009A210B /* ConversationView.swift in Sources */,
+				F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +298,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -321,7 +353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -348,6 +380,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -379,6 +412,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
