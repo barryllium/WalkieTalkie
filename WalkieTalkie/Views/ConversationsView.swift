@@ -23,6 +23,8 @@ struct ConversationsView: View {
         NavigationView {
             if #available(iOS 15, *) {
                 List {
+                    allMessagesView
+                    
                     ForEach(dataManager.filteredConversations) { conversation in
                         ConversationView(conversation: conversation)
                     }
@@ -50,6 +52,14 @@ struct ConversationsView: View {
                         
                     }) {
                         LazyVStack(alignment: .leading, spacing: 0) {
+                            allMessagesView
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                            
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
+                            
                             ForEach(dataManager.filteredConversations) { conversation in
                                 ConversationView(conversation: conversation)
                                     .padding(.horizontal, 16)
@@ -74,6 +84,20 @@ struct ConversationsView: View {
         .transition(.opacity)
         .onAppear {
             dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+        }
+    }
+    
+    var allMessagesView: some View {
+        NavigationLink(destination: HistoryView()) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("All Messages")
+                        .modifier(ThemedTextModifier(style: .title3))
+                    Text("\(dataManager.history.count) Message\(dataManager.history.count == 1 ? "" : "s")")
+                        .modifier(ThemedTextModifier(style: .caption))
+                }
+                Spacer()
+            }
         }
     }
     

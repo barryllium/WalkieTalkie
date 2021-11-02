@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct MessageView: View {
     @EnvironmentObject var dataManager: DataManager
@@ -13,12 +14,24 @@ struct MessageView: View {
     var message: Message
     
     var body: some View {
-        HStack {
-            Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-            
-            Spacer()
+        Button {
+            if dataManager.player.timeControlStatus == .playing,
+               dataManager.playingMessage?.id == message.id {
+                dataManager.player.pause()
+            } else {
+                let recordingUrl = APIClient.default.serverURL.appendingPathComponent(message.recording)
+                dataManager.player = AVPlayer(playerItem: AVPlayerItem(url: recordingUrl))
+                dataManager.player.play()
+                dataManager.playingMessage = message
+            }
+        } label: {
+            HStack {
+                Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                
+                Spacer()
+            }
         }
     }
 }

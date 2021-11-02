@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import AVKit
 
 class DataManager: ObservableObject {
     @AppStorage("current_user") var loggedInUser: String?
@@ -19,6 +20,8 @@ class DataManager: ObservableObject {
     
     @Published var currentMessages: [Message] = []
     @Published var filteredMessages: [Message] = []
+    @Published var playingMessage: Message?
+    @Published var player = AVPlayer()
     
     // MARK: TextFields
     @Published var userName: String = ""

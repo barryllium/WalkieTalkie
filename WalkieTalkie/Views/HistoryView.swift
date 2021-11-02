@@ -88,6 +88,9 @@ struct HistoryView: View {
                 .onAppear {
                     dataManager.setCurrentMessages(conversation: conversation, searchText: searchManager.searchText)
                 }
+                .onDisappear {
+                    dataManager.player.pause()
+                }
         }
         
         @ViewBuilder
