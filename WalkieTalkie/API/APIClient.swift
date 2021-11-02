@@ -21,6 +21,13 @@ class APIClient {
         self.serverURL = url
     }
     
+    @available(iOS 15, *)
+    func fetchURLAsync<T: Decodable>(_ request: AsyncURLRequest<T>) async throws -> T {
+        let (data, _) = try await URLSession.shared.data(for: request.apiRequest.urlRequest)
+        
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+    
     func fetchURL<T: Decodable>(_ request: URLRequest) -> AnyPublisher<T, Error> {
         URLSession.shared.dataTaskPublisher(for: request)
             .tryMap { result in

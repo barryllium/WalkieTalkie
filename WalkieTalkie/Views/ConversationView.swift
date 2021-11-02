@@ -20,7 +20,7 @@ struct ConversationView: View {
                 }
                 
                 ForEach(dataManager.filteredConversations) { conversation in
-                    NavigationLink(destination: HistoryView()) {
+                    NavigationLink(destination: HistoryView(conversation: conversation)) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(conversation.displayName(currentUserName: dataManager.loggedInUser))
                                 .modifier(ThemedTextModifier(style: .title3))

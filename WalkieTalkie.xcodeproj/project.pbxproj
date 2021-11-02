@@ -25,6 +25,7 @@
 		F18F3D71273081D5009A210B /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D70273081D5009A210B /* Color+Extension.swift */; };
 		F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D72273084FA009A210B /* NavSearchModifier.swift */; };
 		F18F3D752730F377009A210B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D742730F377009A210B /* Conversation.swift */; };
+		F18F3D772730FD01009A210B /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D762730FD01009A210B /* RefreshableScrollView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		F18F3D70273081D5009A210B /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		F18F3D72273084FA009A210B /* NavSearchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavSearchModifier.swift; sourceTree = "<group>"; };
 		F18F3D742730F377009A210B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		F18F3D762730FD01009A210B /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,10 +118,11 @@
 			isa = PBXGroup;
 			children = (
 				F18F3D4427304597009A210B /* ContentView.swift */,
-				F18F3D53273046FE009A210B /* LoginView.swift */,
-				F18F3D5627304714009A210B /* HistoryView.swift */,
-				F18F3D5F27304746009A210B /* MessageView.swift */,
 				F18F3D6127304751009A210B /* ConversationView.swift */,
+				F18F3D5627304714009A210B /* HistoryView.swift */,
+				F18F3D53273046FE009A210B /* LoginView.swift */,
+				F18F3D5F27304746009A210B /* MessageView.swift */,
+				F18F3D762730FD01009A210B /* RefreshableScrollView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 			files = (
 				F18F3D6E273081A2009A210B /* ThemedTextModifier.swift in Sources */,
 				F18F3D71273081D5009A210B /* Color+Extension.swift in Sources */,
+				F18F3D772730FD01009A210B /* RefreshableScrollView.swift in Sources */,
 				F18F3D54273046FE009A210B /* LoginView.swift in Sources */,
 				F18F3D5A27304724009A210B /* DataManager.swift in Sources */,
 				F18F3D5C27304736009A210B /* User.swift in Sources */,

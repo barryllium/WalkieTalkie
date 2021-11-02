@@ -17,10 +17,26 @@ class DataManager: ObservableObject {
     @Published var conversations: [Conversation] = []
     @Published var filteredConversations: [Conversation] = []
     
+    @Published var currentMessages: [Message] = []
+    @Published var filteredMessages: [Message] = []
+    
     // MARK: TextFields
     @Published var userName: String = ""
     @Published var conversationSearchText = ""
     @Published var conversationDebouncedSearchText = ""
+    
+    @Published var messageSearchText = ""
+    @Published var messageDebouncedSearchText = ""
+    
+    // MARK: Pull-to-refresh
+    @Published var canRefresh = true
+    @Published var isRefreshing = false {
+        didSet {
+            if !oldValue, isRefreshing, canRefresh {
+                getMessages()
+            }
+        }
+    }
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -88,22 +104,60 @@ class DataManager: ObservableObject {
     func getMessages() {
         APIClient.default.fetchURL(GetMessagesRequest().urlRequest)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 if case .failure(let error) = completion,
                    let apiError = error as? APIError {
                     // TODO: Show Error
                     print(apiError)
+                    self?.isRefreshing = false
                 }
             } receiveValue: { [weak self] (messages: [Message]) in
-                if self?.currentUser?.role == .admin {
-                    self?.history = messages
-                } else {
-                    self?.history = messages.filter {
-                        return $0.usernameTo?.localizedCaseInsensitiveCompare(self?.loggedInUser ?? "") == .orderedSame || $0.usernameFrom?.localizedCaseInsensitiveCompare(self?.loggedInUser ?? "") == .orderedSame
-                    }
-                }
-                self?.createConversations()
+                self?.processHistory(messages: messages)
+                self?.isRefreshing = false
             }
             .store(in: &subscriptions)
+    }
+    
+    @MainActor
+    @available(iOS 15, *)
+    func getAsyncMessages() async {
+        Task { [weak self] in
+            do {
+                let request = AsyncURLRequest<[Message]>(apiRequest: GetMessagesRequest())
+                let fullHistory = try await APIClient.default.fetchURLAsync(request)
+                
+                self?.processHistory(messages: fullHistory)
+            } catch {
+                print("Request failed with error: \(error)")
+            }
+        }
+    }
+    
+    private func processHistory(messages: [Message]) {
+        if self.currentUser?.role == .admin {
+            self.history = messages
+        } else {
+            self.history = messages.filter {
+                $0.usernameTo?.localizedCaseInsensitiveCompare(loggedInUser ?? "") == .orderedSame ||
+                $0.usernameFrom?.localizedCaseInsensitiveCompare(loggedInUser ?? "") == .orderedSame
+            }
+        }
+        self.createConversations()
+    }
+    
+    func setCurrentMessages(conversation: Conversation?) {
+        currentMessages = conversation?.messages ?? history
+        filterMessages()
+    }
+    
+    func filterMessages() {
+        if messageDebouncedSearchText.isEmpty {
+            filteredMessages = currentMessages
+        } else {
+            filteredMessages = currentMessages.filter {
+                $0.usernameTo?.localizedCaseInsensitiveContains(messageDebouncedSearchText) ?? false ||
+                $0.usernameFrom?.localizedCaseInsensitiveContains(messageDebouncedSearchText) ?? false
+            }
+        }
     }
 }

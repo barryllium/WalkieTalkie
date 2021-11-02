@@ -33,6 +33,10 @@ extension APIRequest {
     }
 }
 
+struct AsyncURLRequest<T> {
+    var apiRequest: APIRequest
+}
+
 
 enum HttpMethod: Equatable {
     case get([URLQueryItem])
