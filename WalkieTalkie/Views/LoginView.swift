@@ -15,6 +15,7 @@ struct LoginView: View {
             Text("Username")
                 .modifier(ThemedTextModifier(style: .title2))
             TextField("user@email.com", text: $dataManager.userName)
+                .autocapitalization(.none)
                 .modifier(ThemedTextFieldModifier())
             
             HStack {

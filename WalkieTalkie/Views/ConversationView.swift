@@ -19,8 +19,15 @@ struct ConversationView: View {
                         .modifier(ThemedTextFieldModifier())
                 }
                 
-                ForEach(dataManager.history) { message in
-                    Text("Message: \(message.usernameFrom ?? "User not found") -> \(message.usernameTo ?? "User not found")")
+                ForEach(dataManager.filteredConversations) { conversation in
+                    NavigationLink(destination: HistoryView()) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(conversation.displayName(currentUserName: dataManager.loggedInUser))
+                                .modifier(ThemedTextModifier(style: .title3))
+                            Text(conversation.messageCountText)
+                                .modifier(ThemedTextModifier(style: .caption))
+                        }
+                    }
                 }
             }
             .navigationBarTitle(Text("Conversations"), displayMode: .automatic)

@@ -24,6 +24,7 @@
 		F18F3D6E273081A2009A210B /* ThemedTextModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6D273081A2009A210B /* ThemedTextModifier.swift */; };
 		F18F3D71273081D5009A210B /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D70273081D5009A210B /* Color+Extension.swift */; };
 		F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D72273084FA009A210B /* NavSearchModifier.swift */; };
+		F18F3D752730F377009A210B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D742730F377009A210B /* Conversation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		F18F3D6D273081A2009A210B /* ThemedTextModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTextModifier.swift; sourceTree = "<group>"; };
 		F18F3D70273081D5009A210B /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		F18F3D72273084FA009A210B /* NavSearchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavSearchModifier.swift; sourceTree = "<group>"; };
+		F18F3D742730F377009A210B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,8 +105,9 @@
 		F18F3D50273046C4009A210B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F18F3D5B27304736009A210B /* User.swift */,
+				F18F3D742730F377009A210B /* Conversation.swift */,
 				F18F3D5D2730473D009A210B /* Message.swift */,
+				F18F3D5B27304736009A210B /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -234,6 +237,7 @@
 				F18F3D64273051B3009A210B /* APIClient.swift in Sources */,
 				F18F3D5727304714009A210B /* HistoryView.swift in Sources */,
 				F18F3D6027304746009A210B /* MessageView.swift in Sources */,
+				F18F3D752730F377009A210B /* Conversation.swift in Sources */,
 				F18F3D6C27308071009A210B /* ThemedTextFieldModifier.swift in Sources */,
 				F18F3D4527304597009A210B /* ContentView.swift in Sources */,
 				F18F3D66273052AD009A210B /* APIRequest.swift in Sources */,

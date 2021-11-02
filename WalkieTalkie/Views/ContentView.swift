@@ -12,7 +12,7 @@ struct ContentView: View {
     
     @ViewBuilder
     var body: some View {
-        if dataManager.currentUser == nil {
+        if dataManager.loggedInUser == nil {
             LoginView()
         } else {
             ConversationView()
