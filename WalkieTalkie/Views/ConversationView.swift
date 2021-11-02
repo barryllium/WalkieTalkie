@@ -25,6 +25,8 @@ struct ConversationView: View {
             }
         }
         .disabled(dataManager.isLoading)
+        .accessibilityLabel(Text("View Conversation with \(conversation.displayName(currentUserName: dataManager.loggedInUser))"))
+        .accessibilityAddTraits(.isButton)
     }
 }
 

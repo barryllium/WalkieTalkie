@@ -113,6 +113,7 @@ struct HistoryView: View {
                 } label: {
                     Image(systemName: "magnifyingglass")
                 }
+                .accessibilityLabel(Text("Toggle message search"))
             }
         }
     }

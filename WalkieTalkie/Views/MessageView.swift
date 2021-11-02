@@ -14,6 +14,7 @@ struct MessageView: View {
     var message: Message
     
     var body: some View {
+        
         Button {
             if dataManager.player.timeControlStatus == .playing,
                dataManager.playingMessage?.id == message.id {
@@ -27,7 +28,7 @@ struct MessageView: View {
         } label: {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
+                    Text(message.messageName)
                         .modifier(ThemedTextModifier(style: .title3))
                     
                     Text(dataManager.dateFormatter.string(from: message.date))
@@ -38,6 +39,7 @@ struct MessageView: View {
             }
         }
         .disabled(dataManager.isLoading)
+        .accessibilityLabel(Text("Listen to message from \(message.messageName)"))
     }
 }
 

@@ -112,6 +112,8 @@ struct ConversationsView: View {
                 Spacer()
             }
         }
+        .accessibilityLabel(Text("View All Messages"))
+        .accessibilityAddTraits(.isButton)
         .disabled(dataManager.isLoading)
     }
     
@@ -136,6 +138,7 @@ struct ConversationsView: View {
                     } label: {
                         Image(systemName: "arrow.left.circle")
                     }
+                        .accessibilityLabel("Sign Out")
                         .disabled(dataManager.isLoading)
                     , trailing: trailingView)
                 .onChange(of: searchManager.debouncedSearchText) { text in
@@ -156,6 +159,7 @@ struct ConversationsView: View {
                 } label: {
                     Image(systemName: "magnifyingglass")
                 }
+                .accessibilityLabel(Text("Toggle conversation search"))
             }
         }
     }

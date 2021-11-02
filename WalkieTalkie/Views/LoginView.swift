@@ -19,6 +19,7 @@ struct LoginView: View {
             })
                 .autocapitalization(.none)
                 .modifier(ThemedTextFieldModifier())
+                .accessibilityLabel(Text("Username Textfield"))
             
             HStack {
                 Spacer()
@@ -32,6 +33,7 @@ struct LoginView: View {
                         .background(Color.appBlue)
                         .cornerRadius(8)
                 }
+                .accessibilityLabel(Text("Login Button"))
             }
             
         }

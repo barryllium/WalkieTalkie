@@ -34,6 +34,10 @@ struct Message: Codable, Identifiable {
         }
         return Date()
     }
+    
+    var messageName: String {
+        "\(usernameFrom ?? "Unknown User") to \(usernameTo ?? "Unknown User")"
+    }
 }
 
 final class GetMessagesRequest: APIRequest {
