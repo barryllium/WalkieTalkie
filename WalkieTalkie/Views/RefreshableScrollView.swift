@@ -17,11 +17,17 @@ struct RefreshableScrollView<Content: View>: View {
     var threshold: CGFloat = 80
     @Binding var isRefreshing: Bool
     @Binding var canRefresh: Bool
+    var startRefresh: () -> Void
     let content: Content
 
-    init(height: CGFloat = 80, isRefreshing: Binding<Bool>, canRefresh: Binding<Bool>, @ViewBuilder content: () -> Content) {
+    init(height: CGFloat = 80,
+         isRefreshing: Binding<Bool>,
+         canRefresh: Binding<Bool>,
+         startRefresh: @escaping () -> Void,
+         @ViewBuilder content: () -> Content) {
         _isRefreshing = isRefreshing
         _canRefresh = canRefresh
+        self.startRefresh = startRefresh
         self.threshold = height
         self.content = content()
     }
@@ -54,7 +60,7 @@ struct RefreshableScrollView<Content: View>: View {
             self.rotation = self.symbolRotation(self.scrollOffset)
 
             if !self.isRefreshing && (self.scrollOffset > self.threshold && self.previousScrollOffset <= self.threshold) && canRefresh {
-                self.isRefreshing = true
+                startRefresh()
             }
 
             if self.isRefreshing {

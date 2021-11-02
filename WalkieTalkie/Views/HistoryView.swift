@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @EnvironmentObject var dataManager: DataManager
+    @StateObject var searchManager = SearchManager()
     
     var conversation: Conversation?
     
@@ -22,14 +23,22 @@ struct HistoryView: View {
                         .padding(.vertical, 8)
                 }
             }
-                .modifier(HistoryModifier(conversation: conversation))
-                .refreshable {
-                    await dataManager.getAsyncMessages()
-                }
+            .listStyle(.plain)
+            .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
+            .refreshable {
+                await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
+            }
         } else {
             RefreshableScrollView(height: 70,
                                   isRefreshing: $dataManager.isRefreshing,
-                                  canRefresh: $dataManager.canRefresh) {
+                                  canRefresh: $dataManager.canRefresh,
+                                  startRefresh: {
+                if !dataManager.isRefreshing, dataManager.canRefresh {
+                    dataManager.isRefreshing = true
+                    dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+                }
+                
+            }) {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     ForEach(dataManager.filteredMessages) { message in
                         Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
@@ -40,22 +49,33 @@ struct HistoryView: View {
                     Spacer()
                 }
             }
-                                  
+            .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
         }
     }
     
     struct HistoryModifier: ViewModifier {
         @EnvironmentObject var dataManager: DataManager
+        @ObservedObject var searchManager: SearchManager
         
         var conversation: Conversation?
         
+        var displayMode: NavigationBarItem.TitleDisplayMode {
+            if #available(iOS 15, *) {
+                return .automatic
+            } else {
+                return .inline
+            }
+        }
+        
         func body(content: Content) -> some View {
             content
-                .navigationBarTitle(Text("Conversation"), displayMode: .automatic)
-                .modifier(NavSearchModifier(searchText: $dataManager.messageSearchText))
+                .navigationBarTitle(Text("Conversation"), displayMode: displayMode)
+                .modifier(NavSearchModifier(searchText: $searchManager.searchText))
+                .onChange(of: searchManager.debouncedSearchText) { text in
+                    dataManager.filterMessages(searchText: text)
+                }
                 .onAppear {
-                    dataManager.messageSearchText = ""
-                    dataManager.setCurrentMessages(conversation: conversation)
+                    dataManager.setCurrentMessages(conversation: conversation, searchText: searchManager.searchText)
                 }
         }
     }

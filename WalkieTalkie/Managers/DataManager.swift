@@ -22,39 +22,19 @@ class DataManager: ObservableObject {
     
     // MARK: TextFields
     @Published var userName: String = ""
-    @Published var conversationSearchText = ""
-    @Published var conversationDebouncedSearchText = ""
-    
-    @Published var messageSearchText = ""
-    @Published var messageDebouncedSearchText = ""
     
     // MARK: Pull-to-refresh
     @Published var canRefresh = true
-    @Published var isRefreshing = false {
-        didSet {
-            if !oldValue, isRefreshing, canRefresh {
-                getMessages()
-            }
-        }
-    }
+    @Published var isRefreshing = false
     
     private var subscriptions = Set<AnyCancellable>()
     
     init() {
         currentUser = getCurrentUser()
-        $conversationSearchText
-            .debounce(for: .seconds(0.2),
-                         scheduler: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.conversationDebouncedSearchText = $0
-            }
-            .store(in: &subscriptions)
     }
     
     func clearData() {
         userName = ""
-        conversationSearchText = ""
-        conversationDebouncedSearchText = ""
         history = []
     }
     
@@ -78,7 +58,7 @@ class DataManager: ObservableObject {
     
     
     // MARK: - Conversation functions
-    func createConversations() {
+    func createConversations(searchText: String) {
         conversations = []
         history.forEach { message in
             if let index = conversations.firstIndex(where: { $0.id == message.sortedId }) {
@@ -88,20 +68,20 @@ class DataManager: ObservableObject {
             }
         }
         conversations.sort { $0.lastTimeStamp > $1.lastTimeStamp }
-        filterConversations()
+        filterConversations(searchText: searchText)
     }
     
-    func filterConversations() {
-        if conversationDebouncedSearchText.isEmpty {
+    func filterConversations(searchText: String) {
+        if searchText.isEmpty {
             filteredConversations = conversations
         } else {
-            filteredConversations = conversations.filter { $0.id.localizedCaseInsensitiveContains(conversationDebouncedSearchText)}
+            filteredConversations = conversations.filter { $0.id.localizedCaseInsensitiveContains(searchText)}
         }
     }
     
     
     // MARK: - Message functions
-    func getMessages() {
+    func getMessages(searchText: String) {
         APIClient.default.fetchURL(GetMessagesRequest().urlRequest)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -112,7 +92,7 @@ class DataManager: ObservableObject {
                     self?.isRefreshing = false
                 }
             } receiveValue: { [weak self] (messages: [Message]) in
-                self?.processHistory(messages: messages)
+                self?.processHistory(messages: messages, searchText: searchText)
                 self?.isRefreshing = false
             }
             .store(in: &subscriptions)
@@ -120,20 +100,20 @@ class DataManager: ObservableObject {
     
     @MainActor
     @available(iOS 15, *)
-    func getAsyncMessages() async {
+    func getAsyncMessages(searchText: String) async {
         Task { [weak self] in
             do {
                 let request = AsyncURLRequest<[Message]>(apiRequest: GetMessagesRequest())
                 let fullHistory = try await APIClient.default.fetchURLAsync(request)
                 
-                self?.processHistory(messages: fullHistory)
+                self?.processHistory(messages: fullHistory, searchText: searchText)
             } catch {
                 print("Request failed with error: \(error)")
             }
         }
     }
     
-    private func processHistory(messages: [Message]) {
+    private func processHistory(messages: [Message], searchText: String) {
         if self.currentUser?.role == .admin {
             self.history = messages
         } else {
@@ -142,21 +122,21 @@ class DataManager: ObservableObject {
                 $0.usernameFrom?.localizedCaseInsensitiveCompare(loggedInUser ?? "") == .orderedSame
             }
         }
-        self.createConversations()
+        self.createConversations(searchText: searchText)
     }
     
-    func setCurrentMessages(conversation: Conversation?) {
+    func setCurrentMessages(conversation: Conversation?, searchText: String) {
         currentMessages = conversation?.messages ?? history
-        filterMessages()
+        filterMessages(searchText: searchText)
     }
     
-    func filterMessages() {
-        if messageDebouncedSearchText.isEmpty {
+    func filterMessages(searchText: String) {
+        if searchText.isEmpty {
             filteredMessages = currentMessages
         } else {
             filteredMessages = currentMessages.filter {
-                $0.usernameTo?.localizedCaseInsensitiveContains(messageDebouncedSearchText) ?? false ||
-                $0.usernameFrom?.localizedCaseInsensitiveContains(messageDebouncedSearchText) ?? false
+                $0.usernameTo?.localizedCaseInsensitiveContains(searchText) ?? false ||
+                $0.usernameFrom?.localizedCaseInsensitiveContains(searchText) ?? false
             }
         }
     }

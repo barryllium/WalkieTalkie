@@ -10,12 +10,21 @@ import SwiftUI
 struct ConversationView: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var dataManager: DataManager
+    @StateObject var searchManager = SearchManager()
+    
+    var displayMode: NavigationBarItem.TitleDisplayMode {
+        if #available(iOS 15, *) {
+            return .automatic
+        } else {
+            return .inline
+        }
+    }
     
     var body: some View {
         NavigationView {
             List {
                 if #available(iOS 15, *) {} else {
-                    TextField("Search", text: $dataManager.conversationSearchText)
+                    TextField("Search", text: $searchManager.searchText)
                         .modifier(ThemedTextFieldModifier())
                 }
                 
@@ -30,7 +39,8 @@ struct ConversationView: View {
                     }
                 }
             }
-            .navigationBarTitle(Text("Conversations"), displayMode: .automatic)
+            .listStyle(.plain)
+            .navigationBarTitle(Text("Conversations"), displayMode: displayMode)
             .navigationBarItems(leading: Button {
                 dataManager.logout()
             } label: {
@@ -38,17 +48,17 @@ struct ConversationView: View {
                     .foregroundColor(colorScheme == .dark ? .lightTextColor : .darkTextColor)
             }
             )
-            .onChange(of: dataManager.conversationDebouncedSearchText) { _ in
-                dataManager.filterConversations()
+            .onChange(of: searchManager.debouncedSearchText) { text in
+                dataManager.filterConversations(searchText: text)
             }
-            .modifier(NavSearchModifier(searchText: $dataManager.conversationSearchText))
+            .modifier(NavSearchModifier(searchText: $searchManager.searchText))
             
             HistoryView()
         }
         .zIndex(2.0)
         .transition(.opacity)
         .onAppear {
-            dataManager.getMessages()
+            dataManager.getMessages(searchText: searchManager.debouncedSearchText)
         }
     }
 }

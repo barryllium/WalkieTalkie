@@ -26,6 +26,7 @@
 		F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D72273084FA009A210B /* NavSearchModifier.swift */; };
 		F18F3D752730F377009A210B /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D742730F377009A210B /* Conversation.swift */; };
 		F18F3D772730FD01009A210B /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D762730FD01009A210B /* RefreshableScrollView.swift */; };
+		F18F3D7927317146009A210B /* SearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D7827317146009A210B /* SearchManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		F18F3D72273084FA009A210B /* NavSearchModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavSearchModifier.swift; sourceTree = "<group>"; };
 		F18F3D742730F377009A210B /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		F18F3D762730FD01009A210B /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
+		F18F3D7827317146009A210B /* SearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				F18F3D5927304724009A210B /* DataManager.swift */,
+				F18F3D7827317146009A210B /* SearchManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 				F18F3D66273052AD009A210B /* APIRequest.swift in Sources */,
 				F18F3D4327304597009A210B /* WalkieTalkieApp.swift in Sources */,
 				F18F3D5E2730473D009A210B /* Message.swift in Sources */,
+				F18F3D7927317146009A210B /* SearchManager.swift in Sources */,
 				F18F3D6227304751009A210B /* ConversationView.swift in Sources */,
 				F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */,
 			);
