@@ -26,13 +26,18 @@ struct MessageView: View {
             }
         } label: {
             HStack {
-                Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
+                        .modifier(ThemedTextModifier(style: .title3))
+                    
+                    Text(dataManager.dateFormatter.string(from: message.date))
+                        .modifier(ThemedTextModifier(style: .caption, isSubText: true))
+                }
                 
                 Spacer()
             }
         }
+        .disabled(dataManager.isLoading)
     }
 }
 

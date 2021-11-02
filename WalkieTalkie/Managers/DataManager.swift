@@ -34,6 +34,15 @@ class DataManager: ObservableObject {
     @Published var isShowingAlert = false
     
     private var subscriptions = Set<AnyCancellable>()
+    private var firstLoad = true
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.doesRelativeDateFormatting = true
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
+        return formatter
+    }()
     
     init() {
         currentUser = getCurrentUser()
@@ -50,12 +59,17 @@ class DataManager: ObservableObject {
     
     // MARK: - User functions
     func login() {
-        loggedInUser = userName
-        currentUser = getCurrentUser()
+        withAnimation {
+            loggedInUser = userName
+            currentUser = getCurrentUser()
+        }
     }
     
     func logout() {
-        loggedInUser = nil
+        withAnimation {
+            loggedInUser = nil
+            objectWillChange.send()
+        }
     }
     
     func getCurrentUser() -> User? {
@@ -88,6 +102,10 @@ class DataManager: ObservableObject {
             filteredConversations = conversations.filter { $0.id.localizedCaseInsensitiveContains(searchText)}
         }
         isLoading = false
+        if firstLoad {
+            firstLoad = false
+            setCurrentMessages(conversation: nil, searchText: searchText)
+        }
     }
     
     

@@ -21,8 +21,8 @@ struct ConversationsView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                if #available(iOS 15, *) {
+            if #available(iOS 15, *) {
+                ZStack {
                     List {
                         allMessagesView
                         
@@ -34,60 +34,69 @@ struct ConversationsView: View {
                     .refreshable {
                         await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
                     }
-                } else {
-                    VStack {
-                        if searchManager.isShowingSearch {
-                            TextField("Search", text: $searchManager.searchText)
-                                .modifier(ThemedTextFieldModifier())
+                    
+                    if dataManager.isLoading {
+                        ProgressView("Loading...")
+                    }
+                }
+                .modifier(ConversationsModifier(searchManager: searchManager))
+            } else {
+                VStack {
+                    if searchManager.isShowingSearch {
+                        TextField("Search", text: $searchManager.searchText)
+                            .modifier(ThemedTextFieldModifier())
+                            .padding(.horizontal, 16)
+                    }
+                    
+                    RefreshableScrollView(height: 70,
+                                          isRefreshing: $dataManager.isRefreshing,
+                                          canRefresh: $dataManager.canRefresh,
+                                          startRefresh: {
+                        if !dataManager.isRefreshing, dataManager.canRefresh {
+                            dataManager.isRefreshing = true
+                            dataManager.getMessages(searchText: searchManager.debouncedSearchText)
                         }
                         
-                        RefreshableScrollView(height: 70,
-                                              isRefreshing: $dataManager.isRefreshing,
-                                              canRefresh: $dataManager.canRefresh,
-                                              startRefresh: {
-                            if !dataManager.isRefreshing, dataManager.canRefresh {
-                                dataManager.isRefreshing = true
-                                dataManager.getMessages(searchText: searchManager.debouncedSearchText)
-                            }
+                    }) {
+                        LazyVStack(alignment: .leading, spacing: 0) {
+                            allMessagesView
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
                             
-                        }) {
-                            LazyVStack(alignment: .leading, spacing: 0) {
-                                allMessagesView
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
+                            
+                            ForEach(dataManager.filteredConversations) { conversation in
+                                ConversationView(conversation: conversation)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
                                 
                                 Rectangle()
                                     .fill(Color.gray.opacity(0.3))
                                     .frame(height: 1)
-                                
-                                ForEach(dataManager.filteredConversations) { conversation in
-                                    ConversationView(conversation: conversation)
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 8)
-                                    
-                                    Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
-                                        .frame(height: 1)
-                                }
-                                
-                                Spacer()
                             }
+                            
+                            Spacer()
                         }
                     }
                 }
-                
-                if dataManager.isLoading {
-                    ProgressView("Loading...")
-                }
+                .modifier(ConversationsModifier(searchManager: searchManager))
             }
-            .modifier(ConversationsModifier(searchManager: searchManager))
             
             HistoryView()
         }
         .zIndex(2.0)
         .transition(.opacity)
+        .accentColor(.appBlue)
         .onAppear {
-            dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+            if #available(iOS 15, *) {
+                Task {
+                    await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
+                }
+            } else {
+                dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+            }
         }
     }
     
@@ -107,7 +116,6 @@ struct ConversationsView: View {
     }
     
     struct ConversationsModifier: ViewModifier {
-        @Environment(\.colorScheme) var colorScheme
         @EnvironmentObject var dataManager: DataManager
         @ObservedObject var searchManager: SearchManager
         
@@ -122,12 +130,14 @@ struct ConversationsView: View {
         func body(content: Content) -> some View {
             content
                 .navigationBarTitle(Text("Conversations"), displayMode: displayMode)
-                .navigationBarItems(leading: Button {
-                    dataManager.logout()
-                } label: {
-                    Image(systemName: "arrow.left.circle")
-                        .foregroundColor(colorScheme == .dark ? .lightTextColor : .darkTextColor)
-                }, trailing: trailingView)
+                .navigationBarItems(
+                    leading: Button {
+                        dataManager.logout()
+                    } label: {
+                        Image(systemName: "arrow.left.circle")
+                    }
+                        .disabled(dataManager.isLoading)
+                    , trailing: trailingView)
                 .onChange(of: searchManager.debouncedSearchText) { text in
                     dataManager.filterConversations(searchText: text)
                 }
@@ -145,7 +155,6 @@ struct ConversationsView: View {
                     }
                 } label: {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(colorScheme == .dark ? .lightTextColor : .darkTextColor)
                 }
             }
         }

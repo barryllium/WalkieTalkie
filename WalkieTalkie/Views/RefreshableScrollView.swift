@@ -18,14 +18,17 @@ struct RefreshableScrollView<Content: View>: View {
     @Binding var canRefresh: Bool
     var startRefresh: () -> Void
     let content: Content
+    var showArrow = true
 
     init(height: CGFloat = 80,
          isRefreshing: Binding<Bool>,
          canRefresh: Binding<Bool>,
+         showArrow: Bool = true,
          startRefresh: @escaping () -> Void,
          @ViewBuilder content: () -> Content) {
         _isRefreshing = isRefreshing
         _canRefresh = canRefresh
+        self.showArrow = showArrow
         self.startRefresh = startRefresh
         self.threshold = height
         self.content = content()
@@ -39,7 +42,11 @@ struct RefreshableScrollView<Content: View>: View {
 
                     VStack { self.content }.alignmentGuide(.top) { _ in (self.isRefreshing && self.isFrozen) ? -self.threshold : 0.0 }
 
-                    SymbolView(height: self.threshold, loading: self.isRefreshing, frozen: self.isFrozen, rotation: self.rotation)
+                    SymbolView(height: self.threshold,
+                               loading: self.isRefreshing,
+                               frozen: self.isFrozen,
+                               rotation: self.rotation,
+                               showArrow: self.showArrow)
                 }
             }
             .background(FixedView())
@@ -58,12 +65,15 @@ struct RefreshableScrollView<Content: View>: View {
 
             self.rotation = self.symbolRotation(self.scrollOffset)
 
-            if !self.isRefreshing && (self.scrollOffset > self.threshold && self.previousScrollOffset <= self.threshold) && canRefresh {
+            if !self.isRefreshing,
+               (self.scrollOffset > self.threshold && self.previousScrollOffset <= self.threshold),
+               canRefresh {
                 startRefresh()
             }
 
             if self.isRefreshing {
-                if self.previousScrollOffset > self.threshold && self.scrollOffset <= self.threshold {
+                if self.previousScrollOffset > self.threshold,
+                   self.scrollOffset <= self.threshold {
                     self.isFrozen = true
                 }
             } else {
@@ -90,6 +100,7 @@ struct RefreshableScrollView<Content: View>: View {
         var loading: Bool
         var frozen: Bool
         var rotation: Angle
+        var showArrow: Bool
 
         var body: some View {
             Group {
@@ -108,6 +119,7 @@ struct RefreshableScrollView<Content: View>: View {
                         .padding(height * 0.375)
                         .rotationEffect(rotation)
                         .offset(y: -height + (loading && frozen ? +height : 0.0))
+                        .opacity(showArrow ? 1.0 : 0.000000001)
                 }
             }
         }

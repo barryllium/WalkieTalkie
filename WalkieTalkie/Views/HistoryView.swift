@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HistoryView: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @EnvironmentObject var dataManager: DataManager
     @StateObject var searchManager = SearchManager()
     
@@ -15,8 +16,8 @@ struct HistoryView: View {
     
     @ViewBuilder
     var body: some View {
-        ZStack {
-            if #available(iOS 15, *) {
+        if #available(iOS 15, *) {
+            ZStack {
                 List {
                     ForEach(dataManager.filteredMessages) { message in
                         MessageView(message: message)
@@ -26,49 +27,51 @@ struct HistoryView: View {
                 .refreshable {
                     await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
                 }
-            } else {
-                VStack {
-                    if searchManager.isShowingSearch {
-                        TextField("Search", text: $searchManager.searchText)
-                            .modifier(ThemedTextFieldModifier())
+                
+                if dataManager.isLoading {
+                    ProgressView("Loading...")
+                }
+            }
+            .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
+        } else {
+            VStack {
+                if searchManager.isShowingSearch {
+                    TextField("Search", text: $searchManager.searchText)
+                        .modifier(ThemedTextFieldModifier())
+                        .padding(.horizontal, 16)
+                }
+                
+                RefreshableScrollView(height: 70,
+                                      isRefreshing: $dataManager.isRefreshing,
+                                      canRefresh: $dataManager.canRefresh,
+                                      showArrow: horizontalSizeClass == .compact,
+                                      startRefresh: {
+                    if !dataManager.isRefreshing, dataManager.canRefresh {
+                        dataManager.isRefreshing = true
+                        dataManager.getMessages(searchText: searchManager.debouncedSearchText)
                     }
                     
-                    RefreshableScrollView(height: 70,
-                                          isRefreshing: $dataManager.isRefreshing,
-                                          canRefresh: $dataManager.canRefresh,
-                                          startRefresh: {
-                        if !dataManager.isRefreshing, dataManager.canRefresh {
-                            dataManager.isRefreshing = true
-                            dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+                }) {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(dataManager.filteredMessages) { message in
+                            MessageView(message: message)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                            
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
                         }
                         
-                    }) {
-                        LazyVStack(alignment: .leading, spacing: 0) {
-                            ForEach(dataManager.filteredMessages) { message in
-                                MessageView(message: message)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 8)
-                                
-                                Rectangle()
-                                    .fill(Color.gray.opacity(0.3))
-                                    .frame(height: 1)
-                            }
-                            
-                            Spacer()
-                        }
+                        Spacer()
                     }
                 }
             }
-            
-            if dataManager.isLoading {
-                ProgressView("Loading...")
-            }
+            .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
         }
-        .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
     }
     
     struct HistoryModifier: ViewModifier {
-        @Environment(\.colorScheme) var colorScheme
         @EnvironmentObject var dataManager: DataManager
         @ObservedObject var searchManager: SearchManager
         
@@ -109,7 +112,6 @@ struct HistoryView: View {
                     }
                 } label: {
                     Image(systemName: "magnifyingglass")
-                        .foregroundColor(colorScheme == .dark ? .lightTextColor : .darkTextColor)
                 }
             }
         }

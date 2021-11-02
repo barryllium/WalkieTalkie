@@ -24,17 +24,15 @@ struct Message: Codable, Identifiable {
         case usernameTo = "username_to"
     }
     
-//    init(from decoder: Decoder) throws {
-//        let container = try decoder.container(keyedBy: CodingKeys.self)
-//        id = try container.decode(Int.self, forKey: .id)
-//        usernameFrom = try? container.decode(String.self, forKey: .usernameFrom)
-//        timestamp = try container.decode(String.self, forKey: .timestamp)
-//        recording = try container.decode(String.self, forKey: .recording)
-//        usernameTo = try? container.decode(String.self, forKey: .usernameTo)
-//    }
-    
     var sortedId: String {
         [usernameTo ?? "", usernameFrom ?? ""].sorted().joined(separator: "_")
+    }
+    
+    var date: Date {
+        if let timeDouble = Double(timestamp) {
+            return Date(timeIntervalSince1970: timeDouble)
+        }
+        return Date()
     }
 }
 
