@@ -21,62 +21,66 @@ struct ConversationsView: View {
     
     var body: some View {
         NavigationView {
-            if #available(iOS 15, *) {
-                List {
-                    allMessagesView
-                    
-                    ForEach(dataManager.filteredConversations) { conversation in
-                        ConversationView(conversation: conversation)
+            ZStack {
+                if #available(iOS 15, *) {
+                    List {
+                        allMessagesView
+                        
+                        ForEach(dataManager.filteredConversations) { conversation in
+                            ConversationView(conversation: conversation)
+                        }
                     }
-                }
-                .listStyle(.plain)
-                .modifier(ConversationsModifier(searchManager: searchManager))
-                .refreshable {
-                    await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
-                }
-            } else {
-                VStack {
-                    if searchManager.isShowingSearch {
-                        TextField("Search", text: $searchManager.searchText)
-                            .modifier(ThemedTextFieldModifier())
+                    .listStyle(.plain)
+                    .refreshable {
+                        await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
                     }
-                    
-                    RefreshableScrollView(height: 70,
-                                          isRefreshing: $dataManager.isRefreshing,
-                                          canRefresh: $dataManager.canRefresh,
-                                          startRefresh: {
-                        if !dataManager.isRefreshing, dataManager.canRefresh {
-                            dataManager.isRefreshing = true
-                            dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+                } else {
+                    VStack {
+                        if searchManager.isShowingSearch {
+                            TextField("Search", text: $searchManager.searchText)
+                                .modifier(ThemedTextFieldModifier())
                         }
                         
-                    }) {
-                        LazyVStack(alignment: .leading, spacing: 0) {
-                            allMessagesView
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
+                        RefreshableScrollView(height: 70,
+                                              isRefreshing: $dataManager.isRefreshing,
+                                              canRefresh: $dataManager.canRefresh,
+                                              startRefresh: {
+                            if !dataManager.isRefreshing, dataManager.canRefresh {
+                                dataManager.isRefreshing = true
+                                dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+                            }
                             
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 1)
-                            
-                            ForEach(dataManager.filteredConversations) { conversation in
-                                ConversationView(conversation: conversation)
+                        }) {
+                            LazyVStack(alignment: .leading, spacing: 0) {
+                                allMessagesView
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
                                 
                                 Rectangle()
                                     .fill(Color.gray.opacity(0.3))
                                     .frame(height: 1)
+                                
+                                ForEach(dataManager.filteredConversations) { conversation in
+                                    ConversationView(conversation: conversation)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                    
+                                    Rectangle()
+                                        .fill(Color.gray.opacity(0.3))
+                                        .frame(height: 1)
+                                }
+                                
+                                Spacer()
                             }
-                            
-                            Spacer()
                         }
                     }
                 }
-                .modifier(ConversationsModifier(searchManager: searchManager))
+                
+                if dataManager.isLoading {
+                    ProgressView("Loading...")
+                }
             }
-            
+            .modifier(ConversationsModifier(searchManager: searchManager))
             
             HistoryView()
         }
@@ -99,6 +103,7 @@ struct ConversationsView: View {
                 Spacer()
             }
         }
+        .disabled(dataManager.isLoading)
     }
     
     struct ConversationsModifier: ViewModifier {

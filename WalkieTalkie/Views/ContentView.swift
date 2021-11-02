@@ -16,6 +16,11 @@ struct ContentView: View {
             LoginView()
         } else {
             ConversationsView()
+                .alert(isPresented: $dataManager.isShowingAlert) {
+                    Alert(title: Text("Error"),
+                          message: Text("There was an error fetching recordings. Please try again"),
+                          dismissButton: .default(Text("OK")))
+                }
         }
     }
 }

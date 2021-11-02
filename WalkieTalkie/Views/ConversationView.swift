@@ -24,6 +24,7 @@ struct ConversationView: View {
                 Spacer()
             }
         }
+        .disabled(dataManager.isLoading)
     }
 }
 

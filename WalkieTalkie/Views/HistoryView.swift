@@ -15,51 +15,56 @@ struct HistoryView: View {
     
     @ViewBuilder
     var body: some View {
-        if #available(iOS 15, *) {
-            List {
-                ForEach(dataManager.filteredMessages) { message in
-                    MessageView(message: message)
+        ZStack {
+            if #available(iOS 15, *) {
+                List {
+                    ForEach(dataManager.filteredMessages) { message in
+                        MessageView(message: message)
+                    }
                 }
-            }
-            .listStyle(.plain)
-            .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
-            .refreshable {
-                await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
-            }
-        } else {
-            VStack {
-                if searchManager.isShowingSearch {
-                    TextField("Search", text: $searchManager.searchText)
-                        .modifier(ThemedTextFieldModifier())
+                .listStyle(.plain)
+                .refreshable {
+                    await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
                 }
-                
-                RefreshableScrollView(height: 70,
-                                      isRefreshing: $dataManager.isRefreshing,
-                                      canRefresh: $dataManager.canRefresh,
-                                      startRefresh: {
-                    if !dataManager.isRefreshing, dataManager.canRefresh {
-                        dataManager.isRefreshing = true
-                        dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+            } else {
+                VStack {
+                    if searchManager.isShowingSearch {
+                        TextField("Search", text: $searchManager.searchText)
+                            .modifier(ThemedTextFieldModifier())
                     }
                     
-                }) {
-                    LazyVStack(alignment: .leading, spacing: 0) {
-                        ForEach(dataManager.filteredMessages) { message in
-                            MessageView(message: message)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                            
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.3))
-                                .frame(height: 1)
+                    RefreshableScrollView(height: 70,
+                                          isRefreshing: $dataManager.isRefreshing,
+                                          canRefresh: $dataManager.canRefresh,
+                                          startRefresh: {
+                        if !dataManager.isRefreshing, dataManager.canRefresh {
+                            dataManager.isRefreshing = true
+                            dataManager.getMessages(searchText: searchManager.debouncedSearchText)
                         }
                         
-                        Spacer()
+                    }) {
+                        LazyVStack(alignment: .leading, spacing: 0) {
+                            ForEach(dataManager.filteredMessages) { message in
+                                MessageView(message: message)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    .frame(height: 1)
+                            }
+                            
+                            Spacer()
+                        }
                     }
                 }
             }
-            .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
+            
+            if dataManager.isLoading {
+                ProgressView("Loading...")
+            }
         }
+        .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
     }
     
     struct HistoryModifier: ViewModifier {

@@ -13,6 +13,7 @@ import AVKit
 class DataManager: ObservableObject {
     @AppStorage("current_user") var loggedInUser: String?
     
+    // MARK: Messages
     @Published var history: [Message] = []
     @Published var currentUser: User?
     @Published var conversations: [Conversation] = []
@@ -26,9 +27,11 @@ class DataManager: ObservableObject {
     // MARK: TextFields
     @Published var userName: String = ""
     
-    // MARK: Pull-to-refresh
+    // MARK: Refresh and Alerts
     @Published var canRefresh = true
     @Published var isRefreshing = false
+    @Published var isLoading = false
+    @Published var isShowingAlert = false
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -84,23 +87,27 @@ class DataManager: ObservableObject {
         } else {
             filteredConversations = conversations.filter { $0.id.localizedCaseInsensitiveContains(searchText)}
         }
+        isLoading = false
     }
     
     
     // MARK: - Message functions
     func getMessages(searchText: String) {
+        withAnimation { isLoading = true }
         APIClient.default.fetchURL(GetMessagesRequest().urlRequest)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure(let error) = completion,
                    let apiError = error as? APIError {
-                    // TODO: Show Error
+                    self?.isShowingAlert = true
                     print(apiError)
                     self?.isRefreshing = false
+                    withAnimation { self?.isLoading = false }
                 }
             } receiveValue: { [weak self] (messages: [Message]) in
                 self?.processHistory(messages: messages, searchText: searchText)
                 self?.isRefreshing = false
+                withAnimation { self?.isLoading = false }
             }
             .store(in: &subscriptions)
     }
@@ -108,7 +115,11 @@ class DataManager: ObservableObject {
     @MainActor
     @available(iOS 15, *)
     func getAsyncMessages(searchText: String) async {
+        withAnimation { isLoading = true }
         Task { [weak self] in
+            defer {
+                withAnimation { isLoading = false }
+            }
             do {
                 let request = AsyncURLRequest<[Message]>(apiRequest: GetMessagesRequest())
                 let fullHistory = try await APIClient.default.fetchURLAsync(request)
@@ -146,5 +157,6 @@ class DataManager: ObservableObject {
                 $0.usernameFrom?.localizedCaseInsensitiveContains(searchText) ?? false
             }
         }
+        isLoading = false
     }
 }
