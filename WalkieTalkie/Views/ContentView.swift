@@ -15,7 +15,7 @@ struct ContentView: View {
         if dataManager.loggedInUser == nil {
             LoginView()
         } else {
-            ConversationView()
+            ConversationsView()
         }
     }
 }

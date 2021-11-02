@@ -17,7 +17,7 @@
 		F18F3D5C27304736009A210B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D5B27304736009A210B /* User.swift */; };
 		F18F3D5E2730473D009A210B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D5D2730473D009A210B /* Message.swift */; };
 		F18F3D6027304746009A210B /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D5F27304746009A210B /* MessageView.swift */; };
-		F18F3D6227304751009A210B /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6127304751009A210B /* ConversationView.swift */; };
+		F18F3D6227304751009A210B /* ConversationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6127304751009A210B /* ConversationsView.swift */; };
 		F18F3D64273051B3009A210B /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D63273051B3009A210B /* APIClient.swift */; };
 		F18F3D66273052AD009A210B /* APIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D65273052AD009A210B /* APIRequest.swift */; };
 		F18F3D6C27308071009A210B /* ThemedTextFieldModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18F3D6B27308071009A210B /* ThemedTextFieldModifier.swift */; };
@@ -41,7 +41,7 @@
 		F18F3D5B27304736009A210B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		F18F3D5D2730473D009A210B /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		F18F3D5F27304746009A210B /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		F18F3D6127304751009A210B /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
+		F18F3D6127304751009A210B /* ConversationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsView.swift; sourceTree = "<group>"; };
 		F18F3D63273051B3009A210B /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		F18F3D65273052AD009A210B /* APIRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequest.swift; sourceTree = "<group>"; };
 		F18F3D6727305EB0009A210B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				F18F3D4427304597009A210B /* ContentView.swift */,
-				F18F3D6127304751009A210B /* ConversationView.swift */,
+				F18F3D6127304751009A210B /* ConversationsView.swift */,
 				F18F3D5627304714009A210B /* HistoryView.swift */,
 				F18F3D53273046FE009A210B /* LoginView.swift */,
 				F18F3D5F27304746009A210B /* MessageView.swift */,
@@ -251,7 +251,7 @@
 				F18F3D4327304597009A210B /* WalkieTalkieApp.swift in Sources */,
 				F18F3D5E2730473D009A210B /* Message.swift in Sources */,
 				F18F3D7927317146009A210B /* SearchManager.swift in Sources */,
-				F18F3D6227304751009A210B /* ConversationView.swift in Sources */,
+				F18F3D6227304751009A210B /* ConversationsView.swift in Sources */,
 				F18F3D73273084FA009A210B /* NavSearchModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

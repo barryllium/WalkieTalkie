@@ -29,24 +29,31 @@ struct HistoryView: View {
                 await dataManager.getAsyncMessages(searchText: searchManager.debouncedSearchText)
             }
         } else {
-            RefreshableScrollView(height: 70,
-                                  isRefreshing: $dataManager.isRefreshing,
-                                  canRefresh: $dataManager.canRefresh,
-                                  startRefresh: {
-                if !dataManager.isRefreshing, dataManager.canRefresh {
-                    dataManager.isRefreshing = true
-                    dataManager.getMessages(searchText: searchManager.debouncedSearchText)
+            VStack {
+                if searchManager.isShowingSearch {
+                    TextField("Search", text: $searchManager.searchText)
+                        .modifier(ThemedTextFieldModifier())
                 }
                 
-            }) {
-                LazyVStack(alignment: .leading, spacing: 0) {
-                    ForEach(dataManager.filteredMessages) { message in
-                        Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
+                RefreshableScrollView(height: 70,
+                                      isRefreshing: $dataManager.isRefreshing,
+                                      canRefresh: $dataManager.canRefresh,
+                                      startRefresh: {
+                    if !dataManager.isRefreshing, dataManager.canRefresh {
+                        dataManager.isRefreshing = true
+                        dataManager.getMessages(searchText: searchManager.debouncedSearchText)
                     }
                     
-                    Spacer()
+                }) {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(dataManager.filteredMessages) { message in
+                            Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                        }
+                        
+                        Spacer()
+                    }
                 }
             }
             .modifier(HistoryModifier(searchManager: searchManager, conversation: conversation))
@@ -54,6 +61,7 @@ struct HistoryView: View {
     }
     
     struct HistoryModifier: ViewModifier {
+        @Environment(\.colorScheme) var colorScheme
         @EnvironmentObject var dataManager: DataManager
         @ObservedObject var searchManager: SearchManager
         
@@ -71,12 +79,29 @@ struct HistoryView: View {
             content
                 .navigationBarTitle(Text("Conversation"), displayMode: displayMode)
                 .modifier(NavSearchModifier(searchText: $searchManager.searchText))
+                .navigationBarItems(trailing: trailingView)
                 .onChange(of: searchManager.debouncedSearchText) { text in
                     dataManager.filterMessages(searchText: text)
                 }
                 .onAppear {
                     dataManager.setCurrentMessages(conversation: conversation, searchText: searchManager.searchText)
                 }
+        }
+        
+        @ViewBuilder
+        var trailingView: some View {
+            if #available(iOS 15, *) {
+                EmptyView()
+            } else {
+                Button {
+                    withAnimation {
+                        searchManager.isShowingSearch.toggle()
+                    }
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(colorScheme == .dark ? .lightTextColor : .darkTextColor)
+                }
+            }
         }
     }
 }

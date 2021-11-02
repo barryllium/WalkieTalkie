@@ -11,6 +11,14 @@ import Combine
 class SearchManager: ObservableObject {
     @Published var searchText = ""
     @Published var debouncedSearchText = ""
+    @Published var isShowingSearch = false {
+        didSet {
+            if !isShowingSearch {
+                searchText = ""
+                debouncedSearchText = ""
+            }
+        }
+    }
     
     var subscription: AnyCancellable?
     
