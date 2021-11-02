@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+/* This is a modified version of a pull-to-refresh solution for iOS 13/14 that I have been using
+*  in production apps for over a year. It was not newly created for this project, but was
+*  modified by me based on a simpler example on objc.io */
+
 struct RefreshableScrollView<Content: View>: View {
     @State private var previousScrollOffset: CGFloat = 0
     @State private var scrollOffset: CGFloat = 0
@@ -112,6 +116,8 @@ struct RefreshableScrollView<Content: View>: View {
                     }.frame(height: height).fixedSize()
                         .offset(y: -height + (self.loading && self.frozen ? height : 0.0))
                 } else {
+                    /* When using a split view controller on iOS 14, the Arrow appears over the navigation
+                     * bar UI. We hide the arrow but respect the frame size - hence the opacity of 0.000000001 */
                     Image(systemName: "arrow.down")
                         .resizable()
                         .aspectRatio(contentMode: .fit)

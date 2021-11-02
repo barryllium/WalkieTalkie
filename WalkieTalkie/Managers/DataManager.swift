@@ -68,6 +68,7 @@ class DataManager: ObservableObject {
     func logout() {
         withAnimation {
             loggedInUser = nil
+            // iOS 14 was showing a delay here when logging out, forcing this view change
             objectWillChange.send()
         }
     }
@@ -110,6 +111,7 @@ class DataManager: ObservableObject {
     
     
     // MARK: - Message functions
+    // iOS 14 function to retrieve messages - using Combine
     func getMessages(searchText: String) {
         withAnimation { isLoading = true }
         APIClient.default.fetchURL(GetMessagesRequest().urlRequest)
@@ -130,6 +132,7 @@ class DataManager: ObservableObject {
             .store(in: &subscriptions)
     }
     
+    // iOS 15 function to retrieve messages - using async/await
     @MainActor
     @available(iOS 15, *)
     func getAsyncMessages(searchText: String) async {

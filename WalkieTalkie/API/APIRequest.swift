@@ -33,10 +33,10 @@ extension APIRequest {
     }
 }
 
+// Wrapping the APIRequest in a generic struct, so we can pass the decoding type as a phantom object
 struct AsyncURLRequest<T> {
     var apiRequest: APIRequest
 }
-
 
 enum HttpMethod: Equatable {
     case get([URLQueryItem])

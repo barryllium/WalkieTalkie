@@ -14,7 +14,6 @@ struct MessageView: View {
     var message: Message
     
     var body: some View {
-        
         Button {
             if dataManager.player.timeControlStatus == .playing,
                dataManager.playingMessage?.id == message.id {

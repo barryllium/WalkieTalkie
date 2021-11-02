@@ -24,10 +24,12 @@ struct Message: Codable, Identifiable {
         case usernameTo = "username_to"
     }
     
+    // Creating an id that assures messages are grouped together regardless of who the sender is
     var sortedId: String {
         [usernameTo ?? "", usernameFrom ?? ""].sorted().joined(separator: "_")
     }
     
+    // Generate a date from the timestamp, to be formatted for display
     var date: Date {
         if let timeDouble = Double(timestamp) {
             return Date(timeIntervalSince1970: timeDouble)
@@ -35,6 +37,7 @@ struct Message: Codable, Identifiable {
         return Date()
     }
     
+    // Friendly name for messages list UI
     var messageName: String {
         "\(usernameFrom ?? "Unknown User") to \(usernameTo ?? "Unknown User")"
     }

@@ -41,6 +41,7 @@ struct HistoryView: View {
                         .padding(.horizontal, 16)
                 }
                 
+                // Using a LazyVStack for iOS 14, because the Refreshable ScrollView does not play well with a List
                 RefreshableScrollView(height: 70,
                                       isRefreshing: $dataManager.isRefreshing,
                                       canRefresh: $dataManager.canRefresh,
