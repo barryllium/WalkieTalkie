@@ -10,10 +10,14 @@ import SwiftUI
 struct ThemedTextModifier: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     var style: Font
+    var isSubText = false
 
     func body(content: Content) -> some View {
-        content
-            .foregroundColor(colorScheme == .dark ? .lightTextColor : .darkTextColor)
+        let lightColor: Color = isSubText ? .lightHighlightColor : .lightTextColor
+        let darkColor: Color = isSubText ? .darkHighlightColor : .darkTextColor
+        
+        return content
+            .foregroundColor(colorScheme == .dark ? lightColor : darkColor)
             .font(style)
     }
 }

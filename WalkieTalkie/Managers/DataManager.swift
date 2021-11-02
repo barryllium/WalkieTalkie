@@ -39,6 +39,10 @@ class DataManager: ObservableObject {
     func clearData() {
         userName = ""
         history = []
+        filteredConversations = []
+        filteredMessages = []
+        playingMessage = nil
+        player.pause()
     }
     
     // MARK: - User functions

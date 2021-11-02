@@ -94,7 +94,7 @@ struct ConversationsView: View {
                     Text("All Messages")
                         .modifier(ThemedTextModifier(style: .title3))
                     Text("\(dataManager.history.count) Message\(dataManager.history.count == 1 ? "" : "s")")
-                        .modifier(ThemedTextModifier(style: .caption))
+                        .modifier(ThemedTextModifier(style: .caption, isSubText: true))
                 }
                 Spacer()
             }

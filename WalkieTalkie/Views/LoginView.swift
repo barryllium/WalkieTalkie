@@ -11,10 +11,12 @@ struct LoginView: View {
     @EnvironmentObject var dataManager: DataManager
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 16) {
             Text("Username")
                 .modifier(ThemedTextModifier(style: .title2))
-            TextField("user@email.com", text: $dataManager.userName)
+            TextField("user@email.com", text: $dataManager.userName, onCommit: {
+                dataManager.login()
+            })
                 .autocapitalization(.none)
                 .modifier(ThemedTextFieldModifier())
             
@@ -24,6 +26,11 @@ struct LoginView: View {
                     dataManager.login()
                 } label: {
                     Text("Login")
+                        .font(.body)
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .background(Color.appBlue)
+                        .cornerRadius(8)
                 }
             }
             

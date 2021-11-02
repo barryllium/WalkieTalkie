@@ -19,7 +19,7 @@ struct ConversationView: View {
                     Text(conversation.displayName(currentUserName: dataManager.loggedInUser))
                         .modifier(ThemedTextModifier(style: .title3))
                     Text(conversation.messageCountText)
-                        .modifier(ThemedTextModifier(style: .caption))
+                        .modifier(ThemedTextModifier(style: .caption, isSubText: true))
                 }
                 Spacer()
             }
