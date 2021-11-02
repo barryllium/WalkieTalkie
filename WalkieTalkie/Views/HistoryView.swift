@@ -18,9 +18,7 @@ struct HistoryView: View {
         if #available(iOS 15, *) {
             List {
                 ForEach(dataManager.filteredMessages) { message in
-                    Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                    MessageView(message: message)
                 }
             }
             .listStyle(.plain)
@@ -47,9 +45,13 @@ struct HistoryView: View {
                 }) {
                     LazyVStack(alignment: .leading, spacing: 0) {
                         ForEach(dataManager.filteredMessages) { message in
-                            Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
+                            MessageView(message: message)
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
+                            
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(height: 1)
                         }
                         
                         Spacer()
@@ -108,6 +110,6 @@ struct HistoryView: View {
 
 struct HistoryView_Previews: PreviewProvider {
     static var previews: some View {
-        HistoryView()
+        HistoryView().environmentObject(DataManager())
     }
 }

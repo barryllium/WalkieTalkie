@@ -24,14 +24,7 @@ struct ConversationsView: View {
             if #available(iOS 15, *) {
                 List {
                     ForEach(dataManager.filteredConversations) { conversation in
-                        NavigationLink(destination: HistoryView(conversation: conversation)) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(conversation.displayName(currentUserName: dataManager.loggedInUser))
-                                    .modifier(ThemedTextModifier(style: .title3))
-                                Text(conversation.messageCountText)
-                                    .modifier(ThemedTextModifier(style: .caption))
-                            }
-                        }
+                        ConversationView(conversation: conversation)
                     }
                 }
                 .listStyle(.plain)
@@ -58,14 +51,13 @@ struct ConversationsView: View {
                     }) {
                         LazyVStack(alignment: .leading, spacing: 0) {
                             ForEach(dataManager.filteredConversations) { conversation in
-                                NavigationLink(destination: HistoryView(conversation: conversation)) {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(conversation.displayName(currentUserName: dataManager.loggedInUser))
-                                            .modifier(ThemedTextModifier(style: .title3))
-                                        Text(conversation.messageCountText)
-                                            .modifier(ThemedTextModifier(style: .caption))
-                                    }
-                                }
+                                ConversationView(conversation: conversation)
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                
+                                Rectangle()
+                                    .fill(Color.gray.opacity(0.3))
+                                    .frame(height: 1)
                             }
                             
                             Spacer()
@@ -131,8 +123,8 @@ struct ConversationsView: View {
     }
 }
 
-struct ConversationView_Previews: PreviewProvider {
+struct ConversationsView_Previews: PreviewProvider {
     static var previews: some View {
-        ConversationsView()
+        ConversationsView().environmentObject(DataManager())
     }
 }

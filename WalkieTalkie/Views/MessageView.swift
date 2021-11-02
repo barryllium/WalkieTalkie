@@ -8,13 +8,24 @@
 import SwiftUI
 
 struct MessageView: View {
+    @EnvironmentObject var dataManager: DataManager
+    
+    var message: Message
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            Text("\(message.usernameFrom ?? "Unknown User") to \(message.usernameTo ?? "Unknown User")")
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+            
+            Spacer()
+        }
     }
 }
 
 struct MessageView_Previews: PreviewProvider {
     static var previews: some View {
-        MessageView()
+        let message = Message(id: 1, usernameFrom: "From", timestamp: "123456789", recording: "", usernameTo: "")
+        MessageView(message:message).environmentObject(DataManager())
     }
 }

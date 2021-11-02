@@ -1,9 +1,8 @@
 // 
 //  RefreshableScrollView.swift
-//  Ario
+//  WalkieTalkie
 //
-//  Created by Brett Keck on 4/21/21.
-//  Copyright © 2021 Ario. All rights reserved.
+//  Created by Brett Keck on 11/1/21.
 //
 
 import SwiftUI
