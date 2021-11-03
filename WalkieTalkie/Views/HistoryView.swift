@@ -99,6 +99,7 @@ struct HistoryView: View {
                 }
                 .onDisappear {
                     dataManager.player.pause()
+                    dataManager.playingMessage = nil
                 }
         }
         

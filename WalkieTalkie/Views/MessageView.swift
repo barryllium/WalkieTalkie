@@ -18,6 +18,7 @@ struct MessageView: View {
             if dataManager.player.timeControlStatus == .playing,
                dataManager.playingMessage?.id == message.id {
                 dataManager.player.pause()
+                dataManager.playingMessage = nil
             } else {
                 let recordingUrl = APIClient.default.serverURL.appendingPathComponent(message.recording)
                 dataManager.player = AVPlayer(playerItem: AVPlayerItem(url: recordingUrl))
@@ -35,6 +36,11 @@ struct MessageView: View {
                 }
                 
                 Spacer()
+                
+                Image(systemName: dataManager.playingMessage?.id == message.id ? "pause.circle" : "play.circle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.appBlue)
             }
         }
         .disabled(dataManager.isLoading)

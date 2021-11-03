@@ -46,6 +46,7 @@ class DataManager: ObservableObject {
     
     init() {
         currentUser = getCurrentUser()
+        NotificationCenter.default.addObserver(self, selector: #selector(playerFinished), name: .AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     func clearData() {
@@ -55,6 +56,10 @@ class DataManager: ObservableObject {
         filteredMessages = []
         playingMessage = nil
         player.pause()
+    }
+    
+    @objc func playerFinished() {
+        playingMessage = nil
     }
     
     // MARK: - User functions
